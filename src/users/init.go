@@ -50,6 +50,7 @@ func RegisterRouters(mdle *Module) {
 	http.HandleFunc("/ping", mdle.ping)
 	http.HandleFunc("/login", mdle.HandlerLoginRender)
 	http.HandleFunc("/login/validate", mdle.HandlerValidateLogin)
+	http.HandleFunc("/getdata/users", mdle.HandlerGetDataUsersJSON)
 }
 
 func (m *Module) ping(w http.ResponseWriter, r *http.Request) {

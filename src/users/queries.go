@@ -8,6 +8,7 @@ import (
 type Queries struct {
 	GetDataUserByID *sql.Stmt
 	ValidateUser    *sql.Stmt
+	GetAllDataUsers *sql.Stmt
 }
 
 func prepare(query string, db *sql.DB) *sql.Stmt {
@@ -22,14 +23,28 @@ func NewQueries(dbMaster, dbSlave *sql.DB) *Queries {
 	q := &Queries{
 		GetDataUserByID: prepare(getDataUserByID, dbSlave),
 		ValidateUser:    prepare(validateUser, dbSlave),
+		GetAllDataUsers: prepare(getAllDataUsers, dbSlave),
 	}
 	return q
 }
 
 const (
+	getAllDataUsers = `
+	SELECT
+	username
+	, user_id
+	, name
+	, password
+	, last_login
+	, birth_date
+	, address
+	, gender
+	role_id
+	FROM users`
 	getDataUserByID = `
 	SELECT
-	user_id
+	username
+	, user_id
 	, name
 	, password
 	, last_login
