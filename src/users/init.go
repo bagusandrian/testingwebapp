@@ -9,9 +9,11 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	"html/template"
 	"net/http"
+	"regexp"
 )
 
 var jsoni = jsoniter.ConfigCompatibleWithStandardLibrary
+var rgxSQLInjectionChar = regexp.MustCompile(`[\'\"\t\r\0\n;]`)
 
 type Module struct {
 	Conf     *config.Config
@@ -47,6 +49,7 @@ func NewModule(c *config.Config) *Module {
 func RegisterRouters(mdle *Module) {
 	http.HandleFunc("/ping", mdle.ping)
 	http.HandleFunc("/login", mdle.HandlerLoginRender)
+	http.HandleFunc("/login/validate", mdle.HandlerValidateLogin)
 }
 
 func (m *Module) ping(w http.ResponseWriter, r *http.Request) {

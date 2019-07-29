@@ -7,6 +7,7 @@ import (
 
 type Queries struct {
 	GetDataUserByID *sql.Stmt
+	ValidateUser    *sql.Stmt
 }
 
 func prepare(query string, db *sql.DB) *sql.Stmt {
@@ -17,9 +18,10 @@ func prepare(query string, db *sql.DB) *sql.Stmt {
 	return s
 }
 
-func NewQueries(coreMasterDB, coreSlaveDB *sql.DB) *Queries {
+func NewQueries(dbMaster, dbSlave *sql.DB) *Queries {
 	q := &Queries{
-		GetDataUserByID: prepare(getDataUserByID, coreSlaveDB),
+		GetDataUserByID: prepare(getDataUserByID, dbSlave),
+		ValidateUser:    prepare(validateUser, dbSlave),
 	}
 	return q
 }
@@ -37,4 +39,6 @@ const (
 	role_id
 	FROM users
 	WHERE user_id = ?;`
+	validateUser = `
+	SELECT user_id, username from users where username = ? and password = ?;`
 )
